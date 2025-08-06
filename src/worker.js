@@ -45,7 +45,7 @@ async function initializeBrowser() {
     });
 
     // Navigate to our local server
-    const testPagePort = process.env.TEST_PAGE_PORT || 8081;
+    const testPagePort = process.env.TEST_PAGE_PORT || 8080;
     await page.goto(`http://localhost:${testPagePort}/`);
     console.log(`Navigated to local server on port ${testPagePort}`);
 
@@ -92,7 +92,18 @@ async function initializeBrowser() {
     console.log('Browser initialization complete');
 }
 
-async function callOpenRouter(query, model = 'mistral-tiny', imageUrl = null) {
+async function callOpenRouter(params) {
+    // Destructure parameters with defaults
+    const { 
+        query, 
+        model = 'mistral-tiny',
+        imageUrl = null,
+        imageUrls = null,
+        messages = null,
+        testMode = false,
+        options = {}
+    } = params;
+
     // Convert short model name to full OpenRouter ID using model.js
     const fullModelId = getModelId(model);
     console.log('Starting OpenRouter call with model:', fullModelId);
@@ -100,29 +111,73 @@ async function callOpenRouter(query, model = 'mistral-tiny', imageUrl = null) {
     // Initialize browser if not already done
     await initializeBrowser();
 
+    // Set default options and merge with provided options
+    const modelOptions = {
+        model: fullModelId,
+        stream: true,
+        ...options
+    };
+
     // Evaluate and return full response
-    const response = await page.evaluate(async ({ query, fullModelId, imageUrl }) => {
+    const response = await page.evaluate(async ({ query, messages, imageUrl, imageUrls, testMode, modelOptions }) => {
         console.log('Starting chat with puter...');
         const parts = [];
         let response;
         
-        if (imageUrl) {
-            // Vision models need the image URL
-            console.log('Using vision mode with image:', imageUrl);
-            response = await puter.ai.chat(query, imageUrl, { model: fullModelId, stream: true });
-        } else {
-            // Standard text models
-            response = await puter.ai.chat(query, { model: fullModelId, stream: true });
+        try {
+            // Handle all possible puter.ai.chat() syntax variants based on what parameters are provided
+            if (messages) {
+                // Messages array syntax: puter.ai.chat([messages], testMode, options)
+                console.log('Using messages array format');
+                response = await puter.ai.chat(messages, testMode, modelOptions);
+            } else if (imageUrls && Array.isArray(imageUrls)) {
+                // Multiple images: puter.ai.chat(prompt, [imageURLArray], testMode, options)
+                console.log('Using multiple images:', imageUrls.length);
+                response = await puter.ai.chat(query, imageUrls, testMode, modelOptions);
+            } else if (imageUrl) {
+                // Single image: puter.ai.chat(prompt, imageURL, testMode, options)
+                console.log('Using single image:', imageUrl);
+                response = await puter.ai.chat(query, imageUrl, testMode, modelOptions);
+            } else {
+                // Standard text: puter.ai.chat(prompt, testMode, options) or puter.ai.chat(prompt, options)
+                console.log('Using standard text mode');
+                if (testMode) {
+                    response = await puter.ai.chat(query, testMode, modelOptions);
+                } else {
+                    response = await puter.ai.chat(query, modelOptions);
+                }
+            }
+
+            // Handle streaming response
+            if (modelOptions.stream) {
+                for await (const part of response) {
+                    if (part?.text) parts.push(part.text);
+                    // Handle function calls if present
+                    if (part?.tool_calls) {
+                        console.log('Tool calls received:', part.tool_calls);
+                    }
+                }
+                return { text: parts.join('') };
+            } else {
+                // For non-streaming responses, return as is
+                return response;
+            }
+        } catch (error) {
+            console.error('Error in puter.ai.chat:', error);
+            throw new Error(error.message || 'Unknown error in AI chat');
         }
+    }, { query, messages, imageUrl, imageUrls, testMode, modelOptions });
 
-        for await (const part of response) {
-            if (part?.text) parts.push(part.text);
-        }
-
-        return parts.join('');
-    }, { query, fullModelId, imageUrl });
-
-    return response;
+    // Handle tool_calls and standard responses uniformly
+    if (response.text) {
+        return response.text;
+    } else if (response.tool_calls) {
+        // If we have tool calls, return the response as is with tool_calls
+        return response;
+    } else {
+        // For simple string responses or other formats
+        return response;
+    }
 }
 
 // Cleanup function to close browser

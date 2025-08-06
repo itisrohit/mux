@@ -12,13 +12,36 @@ app.get('/', (c) => c.text('OpenRouter API Wrapper is running.'));
 
 app.post('/chat', async (c) => {
     const body = await c.req.json();
-    const query = body.query || 'Say hi!';
+    
+    // Extract all possible parameters from request
+    const query = body.query;
     const model = body.model || process.env.DEFAULT_MODEL || 'mistral-tiny';
-    const imageUrl = body.imageUrl || null; // Image URL for vision models
+    const imageUrl = body.imageUrl || null; // Single image URL for vision models
+    const imageUrls = body.imageUrls || null; // Array of image URLs
+    const messages = body.messages || null; // Array of message objects for conversation context
+    const testMode = body.testMode === true; // Boolean for test mode
+    const options = body.options || {}; // Additional options (stream, max_tokens, temperature, tools)
+    
+    // If no query and no messages, use a default
+    if (!query && !messages) {
+        return c.json({ success: false, error: "Either 'query' or 'messages' parameter is required" }, 400);
+    }
 
     try {
-        const response = await callOpenRouter(query, model, imageUrl);
-        return c.json({ success: true, response });
+        const response = await callOpenRouter({
+            query,
+            model,
+            imageUrl,
+            imageUrls,
+            messages,
+            testMode,
+            options
+        });
+        
+        return c.json({ 
+            success: true, 
+            response 
+        });
     } catch (err) {
         return c.json({ success: false, error: err.message });
     }
@@ -83,7 +106,10 @@ async function initServer() {
         try {
             const testMessage = process.env.INIT_MESSAGE || "Hi";
             const defaultModel = process.env.DEFAULT_MODEL || "mistral-tiny";
-            const response = await callOpenRouter(testMessage, defaultModel, null);
+            const response = await callOpenRouter({
+                query: testMessage,
+                model: defaultModel
+            });
             console.log('✅ Test call successful');
         } catch (err) {
             console.error('❌ Test call failed, but browser is ready:', err.message);
