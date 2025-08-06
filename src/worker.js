@@ -45,7 +45,7 @@ async function initializeBrowser() {
     });
 
     // Navigate to our local server
-    const testPagePort = process.env.TEST_PAGE_PORT || 8080;
+    const testPagePort = process.env.TEST_PAGE_PORT || 8081;
     await page.goto(`http://localhost:${testPagePort}/`);
     console.log(`Navigated to local server on port ${testPagePort}`);
 
