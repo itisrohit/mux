@@ -22,7 +22,7 @@ simpleServer.stderr.on('data', (data) => {
 // Give the simple server a moment to start up
 setTimeout(() => {
     // Start the main API server
-    console.log('🚀 Starting Muxly API server...');
+    console.log('🚀 Starting Mux API server...');
     const apiServer = spawn('node', ['src/server.js'], {
         stdio: 'inherit',
         shell: true
