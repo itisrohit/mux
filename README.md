@@ -10,6 +10,12 @@ Mux is a Node.js API wrapper for Puter.js that provides access to various AI mod
 - **Vision Model Support**: Send images to vision-capable models
 - **Clean API**: Simple REST API interface
 
+## Demo
+
+![Mux API Demo - Testing Claude Opus 4](doc/example.gif)
+
+*Demonstration of Mux API in action, testing Claude Opus 4 model capabilities*
+
 ## Setup
 
 > ⚠️ **IMPORTANT**: This API requires a Chromium browser window to be open while running. Do not close the browser window that opens when you start the server.
