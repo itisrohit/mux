@@ -1,0 +1,28 @@
+{
+  "name": "mux",
+  "version": "1.0.0",
+  "description": "OpenRouter API Wrapper with Puter.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node start-all.js",
+    "start-api": "node src/server.js",
+    "start-html": "node simple-server.js",
+    "dev": "node start-all.js"
+  },
+  "keywords": [
+    "openrouter",
+    "ai",
+    "puter",
+    "playwright"
+  ],
+  "author": "Rohit Kumar",
+  "dependencies": {
+    "@hono/node-server": "^1.8.0",
+    "dotenv": "^17.2.1",
+    "hono": "^4.0.0",
+    "playwright": "^1.54.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

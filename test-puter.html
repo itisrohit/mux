@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Puter.js Test</title>
+</head>
+<body>
+    <h1>Puter.js Test</h1>
+    <div id="output"></div>
+    
+    <script src="https://js.puter.com/v2/"></script>
+    <script>
+        // Wait for Puter to load
+        window.addEventListener('load', async () => {
+            console.log('Page loaded, checking for puter...');
+            
+            // Wait for puter to be available
+            while (!window.puter) {
+                console.log('Waiting for puter...');
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            console.log('Puter is available!');
+            
+            try {
+                // Test with a simple query
+                const response = await puter.ai.chat(
+                    "Write a short poem about coding",
+                    { model: "claude-sonnet-4" }
+                );
+                
+                console.log('Response received:', response);
+                document.getElementById('output').innerHTML = `
+                    <h2>Response from Puter.js:</h2>
+                    <pre>${response}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('output').innerHTML = `
+                    <h2>Error:</h2>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        });
+    </script>
+</body>
+</html> 
