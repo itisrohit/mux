@@ -100,3 +100,6 @@ Thumbs.db
 test-results/
 playwright-report/
 playwright/.cache/ 
+
+#token
+.puter_token
