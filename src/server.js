@@ -13,7 +13,12 @@ app.get('/', (c) => c.text('Mux API is running.'));
  * Chat Endpoint - Optimized concepts
  */
 app.post('/chat', async (c) => {
-    const body = await c.req.json();
+    let body;
+    try {
+        body = await c.req.json();
+    } catch (err) {
+        return c.json({ success: false, error: "Invalid JSON body" }, 400);
+    }
 
     const query = body.query;
     const modelInput = body.model || process.env.DEFAULT_MODEL || 'gpt-4o-mini';
@@ -117,4 +122,16 @@ app.get('/api/categories', (c) => {
 
 const port = 1862;
 serve({ fetch: app.fetch, port });
-console.log(`🚀 Mux API Server running on port ${port}`);
+
+console.log('\n🚀 Mux API Server running on port ' + port);
+console.log('\n📡 Available Endpoints:');
+console.log('   POST /chat              - Chat completion with streaming, vision & function calling');
+console.log('   GET  /api/models        - List all 250+ available models');
+console.log('   GET  /api/categories    - List all provider categories');
+console.log('   GET  /api/models/:cat   - Get models by category (anthropic, openai, etc.)');
+console.log('\n💡 Quick Start:');
+console.log('   curl -X POST http://localhost:' + port + '/chat \\');
+console.log('     -H "Content-Type: application/json" \\');
+console.log('     -d \'{"query": "Hello!", "model": "gpt-4o-mini"}\'');
+console.log('\n📚 Documentation: ./docs/API_EXAMPLES.md');
+console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
