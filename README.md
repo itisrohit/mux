@@ -1,3 +1,4 @@
+
 <div align="center">
   <h1>Mux</h1>
   <p>High-performance Node.js API wrapper for Puter.js</p>
@@ -13,27 +14,29 @@ Mux is a high-performance, pure Node.js API wrapper for Puter.js. It provides di
 
 ## Features
 
-- 🚀 **High-Performance**: Optimized HTTP communication bypassing browser overhead
-- 🤖 **250+ AI Models**: OpenAI, Anthropic, Google, Meta, DeepSeek, and more
-- 📡 **Advanced Streaming**: Real-time token delivery with reasoning support
-- 👁️ **Vision Support**: Multimodal tasks via image URL processing
-- 🔧 **Function Calling**: Native tool/function calling with parallel execution
-- 🔄 **Model Rotation**: Automatic load balancing across model endpoints
-- 🔐 **Secure Storage**: Local token management
+- **High Performance**: Optimized HTTP communication that bypasses browser overhead
+- **250+ AI Models**: Access models from OpenAI, Anthropic, Google, Meta, DeepSeek, and others
+- **Advanced Streaming**: Real-time token streaming with reasoning support
+- **Vision Support**: Multimodal requests via image URL processing
+- **Function Calling**: Native tool/function calling with parallel execution
+- **Model Rotation**: Automatic load balancing across model endpoints
+- **Secure Storage**: Local authentication token management
 
 ## Quick Start
 
 ### Installation
 ```bash
 npm install
-```
+````
 
 ### Launch Server
+
 ```bash
 npm start
 ```
 
 ### Authentication
+
 On first run, provide your `puter.auth.token` from the [Puter Playground](https://docs.puter.com/playground/).
 
 ## API Overview
@@ -51,7 +54,8 @@ curl -X POST http://localhost:1862/chat \
   }'
 ```
 
-**Response:**
+**Response**
+
 ```json
 {
   "success": true,
@@ -62,16 +66,17 @@ curl -X POST http://localhost:1862/chat \
 
 ### Key Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/chat` | POST | Chat completion with streaming, vision, and function calling |
-| `/api/models` | GET | List all 250+ available models |
-| `/api/categories` | GET | List all provider categories |
-| `/api/models/:category` | GET | Get models by provider (e.g., `anthropic`, `openai`) |
+| Endpoint                | Method | Description                                                  |
+| ----------------------- | ------ | ------------------------------------------------------------ |
+| `/chat`                 | POST   | Chat completion with streaming, vision, and function calling |
+| `/api/models`           | GET    | List all available models                                    |
+| `/api/categories`       | GET    | List provider categories                                     |
+| `/api/models/:category` | GET    | Get models by provider (e.g. `anthropic`, `openai`)          |
 
-### Core Features
+## Core Capabilities
 
-#### 💬 Chat Completion
+### Chat Completion
+
 ```bash
 curl -X POST http://localhost:1862/chat \
   -H "Content-Type: application/json" \
@@ -81,17 +86,19 @@ curl -X POST http://localhost:1862/chat \
   }'
 ```
 
-#### 📡 Streaming
+### Streaming
+
 ```bash
 curl -X POST http://localhost:1862/chat \
   -H "Content-Type: application/json" \
   -d '{
     "query": "Write a poem",
-    "options": {"stream": true}
+    "options": { "stream": true }
   }' --no-buffer
 ```
 
-#### 👁️ Vision/Image Analysis
+### Vision / Image Analysis
+
 ```bash
 curl -X POST http://localhost:1862/chat \
   -H "Content-Type: application/json" \
@@ -102,7 +109,8 @@ curl -X POST http://localhost:1862/chat \
   }'
 ```
 
-#### 🔧 Function Calling
+### Function Calling
+
 ```bash
 curl -X POST http://localhost:1862/chat \
   -H "Content-Type: application/json" \
@@ -114,7 +122,7 @@ curl -X POST http://localhost:1862/chat \
         "type": "function",
         "function": {
           "name": "get_weather",
-          "parameters": {...}
+          "parameters": { }
         }
       }]
     }
@@ -123,32 +131,33 @@ curl -X POST http://localhost:1862/chat \
 
 ## Request Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `query` | string | Simple text query |
-| `messages` | array | Array of message objects with `role` and `content` |
-| `model` | string | Model identifier (default: `gpt-4o-mini`) |
-| `imageUrl` | string | Single image URL for vision tasks |
-| `imageUrls` | array | Multiple image URLs |
-| `options.stream` | boolean | Enable streaming response |
-| `options.tools` | array | Function/tool definitions |
-| `options.tool_choice` | string | `auto`, `required`, or `none` |
-| `options.parallel_tool_calls` | boolean | Enable parallel function calls |
-| `options.temperature` | number | Sampling temperature (0-2) |
-| `options.top_p` | number | Nucleus sampling |
-| `options.frequency_penalty` | number | Reduce repetition (-2 to 2) |
-| `options.presence_penalty` | number | Encourage diversity (-2 to 2) |
-| `options.response_format` | object | Force JSON output: `{"type": "json_object"}` |
-| `options.reasoning_effort` | string | For reasoning models: `low`, `medium`, `high` |
+| Parameter                     | Type    | Description                               |
+| ----------------------------- | ------- | ----------------------------------------- |
+| `query`                       | string  | Single text prompt                        |
+| `messages`                    | array   | Structured chat messages                  |
+| `model`                       | string  | Model identifier (default: `gpt-4o-mini`) |
+| `imageUrl`                    | string  | Single image URL                          |
+| `imageUrls`                   | array   | Multiple image URLs                       |
+| `options.stream`              | boolean | Enable streaming                          |
+| `options.tools`               | array   | Function/tool definitions                 |
+| `options.tool_choice`         | string  | `auto`, `required`, or `none`             |
+| `options.parallel_tool_calls` | boolean | Enable parallel calls                     |
+| `options.temperature`         | number  | Sampling temperature (0–2)                |
+| `options.top_p`               | number  | Nucleus sampling                          |
+| `options.frequency_penalty`   | number  | Reduce repetition                         |
+| `options.presence_penalty`    | number  | Encourage diversity                       |
+| `options.response_format`     | object  | Force JSON output                         |
+| `options.reasoning_effort`    | string  | `low`, `medium`, `high`                   |
 
 ## Response Format
 
-**Standard Response:**
+**Standard Response**
+
 ```json
 {
   "success": true,
   "response": "The AI response text",
-  "reasoning": "Optional reasoning tokens (for reasoning models)",
+  "reasoning": "Optional reasoning output",
   "usage": {
     "prompt_tokens": 10,
     "completion_tokens": 20,
@@ -159,21 +168,24 @@ curl -X POST http://localhost:1862/chat \
 }
 ```
 
-**Streaming Response:**  
-Plain text stream of response tokens.
+**Streaming Response**
+Plain text token stream.
 
 ## Documentation
 
-📚 **[Complete API Examples](./docs/API_EXAMPLES.md)** - Detailed examples with curl commands for all features
+**[Complete API Examples](./docs/API_EXAMPLES.md)** - Detailed examples with curl commands for all features
 
 ## Popular Models
 
-- **OpenAI**: `gpt-4o`, `gpt-4o-mini`, `o1`, `o1-mini`
-- **Anthropic**: `claude-3.7-sonnet`, `claude-3.5-sonnet`, `claude-3-opus`
-- **Google**: `gemini-2.0-flash`, `gemini-1.5-pro`
-- **DeepSeek**: `deepseek-r1`, `deepseek-v3`
-- **Meta**: `llama-3.3-70b`, `llama-3.1-405b`
-- **xAI**: `grok-2`, `grok-beta`
+* **OpenAI**: `gpt-4o`, `gpt-4o-mini`, `o1`, `o1-mini`
+* **Anthropic**: `claude-3.7-sonnet`, `claude-3.5-sonnet`, `claude-3-opus`
+* **Google**: `gemini-2.0-flash`, `gemini-1.5-pro`
+* **DeepSeek**: `deepseek-r1`, `deepseek-v3`
+* **Meta**: `llama-3.3-70b`, `llama-3.1-405b`
+* **xAI**: `grok-2`, `grok-beta`
 
-View all 250+ models: `curl http://localhost:1862/api/models`
+View all available models:
 
+```bash
+curl http://localhost:1862/api/models
+```
