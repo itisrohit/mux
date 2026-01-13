@@ -1,143 +1,104 @@
-// Load environment variables
-require('dotenv').config();
-
 const { Hono } = require('hono');
 const { serve } = require('@hono/node-server');
-const { callOpenRouter, initializeBrowser, cleanup } = require('./worker.js');
-const { getAllModels, getModelsByCategory, getCategories, getModelInfo } = require('./model.js');
+const { streamText } = require('hono/streaming');
+const { chatCompletion } = require('./puter.js');
+const { getModelId, getAllModels, getModelsByCategory, getCategories } = require('./model.js');
+const { getToken } = require('./config.js');
 
 const app = new Hono();
 
-app.get('/', (c) => c.text('OpenRouter API Wrapper is running.'));
+app.get('/', (c) => c.text('Mux API is running.'));
 
+/**
+ * Chat Endpoint - Optimized concepts
+ */
 app.post('/chat', async (c) => {
     const body = await c.req.json();
-    
-    // Extract all possible parameters from request
+
     const query = body.query;
-    const model = body.model || process.env.DEFAULT_MODEL || 'mistral-tiny';
-    const imageUrl = body.imageUrl || null; // Single image URL for vision models
-    const imageUrls = body.imageUrls || null; // Array of image URLs
-    const messages = body.messages || null; // Array of message objects for conversation context
-    const testMode = body.testMode === true; // Boolean for test mode
-    const options = body.options || {}; // Additional options (stream, max_tokens, temperature, tools)
-    
-    // If no query and no messages, use a default
-    if (!query && !messages) {
-        return c.json({ success: false, error: "Either 'query' or 'messages' parameter is required" }, 400);
+    const modelInput = body.model || process.env.DEFAULT_MODEL || 'gpt-4o-mini';
+    const model = getModelId(modelInput);
+
+    let messages = body.messages || [];
+    if (messages.length === 0 && query) {
+        messages = [{ role: 'user', content: query }];
+    }
+
+    if (messages.length === 0) {
+        return c.json({ success: false, error: "Either 'query' or 'messages' is required" }, 400);
+    }
+
+    const options = body.options || {};
+    const streamRequested = options.stream === true;
+    const token = getToken() || c.req.header('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+        return c.json({ success: false, error: "PUTER_TOKEN not found." }, 401);
     }
 
     try {
-        const response = await callOpenRouter({
-            query,
+        const result = await chatCompletion({
             model,
-            imageUrl,
-            imageUrls,
             messages,
-            testMode,
+            stream: streamRequested,
+            token,
+            testMode: body.testMode,
+            media: body.imageUrls || (body.imageUrl ? [body.imageUrl] : null),
             options
         });
-        
-        return c.json({ 
-            success: true, 
-            response 
-        });
+
+        if (streamRequested) {
+            return streamText(c, async (stream) => {
+                c.header('Content-Type', 'text/plain; charset=utf-8');
+                for await (const chunk of result) {
+                    if (chunk.type === 'content' || chunk.type === 'reasoning') {
+                        await stream.write(chunk.content || "");
+                    }
+                    // Meta information like usage is logged but not written to text stream
+                }
+            });
+        } else {
+            return c.json({
+                success: true,
+                response: result.text,
+                reasoning: result.reasoning,
+                usage: result.usage,
+                tool_calls: result.tool_calls,
+                model: model
+            });
+        }
     } catch (err) {
-        return c.json({ success: false, error: err.message });
+        console.error('Chat Error:', err.message);
+        return c.json({ success: false, error: err.message }, 500);
     }
 });
 
-// Get all available models
+// Model endpoints...
 app.get('/api/models', (c) => {
     const allModels = getAllModels();
-    const modelList = Object.entries(allModels).map(([shortName, fullId]) => {
-        const info = getModelInfo(fullId);
-        return {
-            shortName,
-            fullId,
-            provider: fullId.split('/')[1] || 'Unknown'
-        };
-    });
-    
-    return c.json({ 
-        models: modelList,
-        total: modelList.length
+    return c.json({
+        models: Object.keys(allModels).map(m => ({ shortName: m, fullId: Array.isArray(allModels[m]) ? allModels[m][0] : allModels[m] })),
+        total: Object.keys(allModels).length
     });
 });
 
-// Get models by category
 app.get('/api/models/:category', (c) => {
     const category = c.req.param('category');
     const categoryModels = getModelsByCategory(category);
-    
-    if (Object.keys(categoryModels).length === 0) {
-        return c.json({ error: 'Category not found' }, 404);
-    }
-    
-    const modelList = Object.entries(categoryModels).map(([shortName, fullId]) => ({
-        shortName,
-        fullId,
-        provider: fullId.split('/')[1] || 'Unknown'
-    }));
-    
-    return c.json({ 
+    return c.json({
         category,
-        models: modelList,
-        total: modelList.length
+        models: Object.keys(categoryModels).map(m => ({ shortName: m, fullId: Array.isArray(categoryModels[m]) ? categoryModels[m][0] : categoryModels[m] })),
+        total: Object.keys(categoryModels).length
+    });
+});
+app.get('/api/categories', (c) => {
+    const categories = getCategories();
+    return c.json({
+        categories,
+        total: categories.length
     });
 });
 
-// Get all categories
-app.get('/api/categories', (c) => {
-    const categories = getCategories();
-    return c.json({ categories });
-});
-
-const port = process.env.API_PORT || 3001;
-
-// Initialize browser and test it with a simple call when server starts
-async function initServer() {
-    try {
-        // First just initialize the browser
-        await initializeBrowser();
-        console.log('✅ Browser initialized successfully');
-        
-        // Then do a test call
-        try {
-            const testMessage = process.env.INIT_MESSAGE || "Hi";
-            const defaultModel = process.env.DEFAULT_MODEL || "mistral-tiny";
-            const response = await callOpenRouter({
-                query: testMessage,
-                model: defaultModel
-            });
-            console.log('✅ Test call successful');
-        } catch (err) {
-            console.error('❌ Test call failed, but browser is ready:', err.message);
-        }
-    } catch (err) {
-        console.error('❌ Failed to initialize browser:', err.message);
-    }
-
-    console.log(`🚀 OpenRouter API Wrapper is running on port ${port}`);
-}
-
-// Initialize the server
-initServer();
-
-// Setup graceful shutdown
-process.on('SIGINT', async () => {
-    console.log('\n🛑 Shutting down gracefully...');
-    await cleanup();
-    process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-    console.log('\n🛑 Shutting down gracefully...');
-    await cleanup();
-    process.exit(0);
-});
-
-serve({
-    fetch: app.fetch,
-    port
-}); 
+const port = 1862;
+serve({ fetch: app.fetch, port });
+console.log(`🚀 Mux API Server running on port ${port}`);
