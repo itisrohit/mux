@@ -1,50 +1,41 @@
-// Load environment variables
-require('dotenv').config();
-
 const { spawn } = require('child_process');
-const path = require('path');
+const { hasToken } = require('./src/config.js');
 
-// Start the simple server
-console.log('🚀 Starting simple HTML server...');
-const simpleServer = spawn('node', ['simple-server.js'], {
-    stdio: 'pipe',
-    shell: true
-});
+async function start() {
+    // Check if the Puter token exists
+    if (!hasToken()) {
+        console.log('⚠️  Puter token not found.');
+        console.log('🚀 Running token extraction utility...');
 
-simpleServer.stdout.on('data', (data) => {
-    console.log(`[HTML Server] ${data.toString().trim()}`);
-});
+        // Run worker.js to get the token
+        const extractor = spawn('node', ['src/worker.js'], { stdio: 'inherit' });
 
-simpleServer.stderr.on('data', (data) => {
-    console.error(`[HTML Server ERROR] ${data.toString().trim()}`);
-});
+        await new Promise((resolve) => {
+            extractor.on('exit', () => resolve());
+        });
+    }
 
-// Give the simple server a moment to start up
-setTimeout(() => {
-    // Start the main API server
-    console.log('🚀 Starting Mux API server...');
+    if (!hasToken()) {
+        console.error('❌ Failed to obtain Puter token. Please run "npm run token" manually.');
+        process.exit(1);
+    }
+
+    console.log('🚀 Starting Mux API Server...');
     const apiServer = spawn('node', ['src/server.js'], {
         stdio: 'inherit',
         shell: true
     });
-    
+
     apiServer.on('error', (error) => {
         console.error(`Failed to start API server: ${error.message}`);
         process.exit(1);
     });
-    
+
     // Handle process termination
     process.on('SIGINT', () => {
-        console.log('\n🛑 Shutting down both servers...');
-        simpleServer.kill('SIGINT');
         apiServer.kill('SIGINT');
         process.exit(0);
     });
-    
-    process.on('SIGTERM', () => {
-        console.log('\n🛑 Shutting down both servers...');
-        simpleServer.kill('SIGTERM');
-        apiServer.kill('SIGTERM');
-        process.exit(0);
-    });
-}, 1000); // Wait 1 second before starting API server
+}
+
+start();
