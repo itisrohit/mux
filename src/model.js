@@ -88,7 +88,9 @@ const models = {
         "llama-3.3-8b": "openrouter:meta-llama/llama-3.3-8b-instruct:free",
         "llama-3.3-70b": ["openrouter:meta-llama/llama-3.3-70b-instruct:free", "openrouter:meta-llama/llama-3.3-70b-instruct"],
         "llama-4-maverick": ["openrouter:meta-llama/llama-4-maverick:free", "openrouter:meta-llama/llama-4-maverick"],
-        "llama-4-scout": ["openrouter:meta-llama/llama-4-scout:free", "openrouter:meta-llama/llama-4-scout"],
+        "llama-4-scout": ["openrouter:meta-llama/llama-4-scout:free", "openrouter:meta-llama/llama-4-scout"]
+    },
+    nvidia: {
         "nemotron-49b": ["openrouter:nvidia/llama-3.3-nemotron-super-49b-v1:free", "openrouter:nvidia/llama-3.3-nemotron-super-49b-v1"],
         "nemotron-70b": "openrouter:nvidia/llama-3.1-nemotron-70b-instruct",
         "nemotron-253b": "openrouter:nvidia/llama-3.1-nemotron-ultra-253b-v1:free"
@@ -174,68 +176,120 @@ const models = {
         "wizardlm-2-8x22b": "openrouter:microsoft/wizardlm-2-8x22b",
         "mai-ds-r1": "openrouter:microsoft/mai-ds-r1"
     },
-    others: {
+    nousresearch: {
         "hermes-2-dpo": "openrouter:nousresearch/nous-hermes-2-mixtral-8x7b-dpo",
         "hermes-2-pro": "openrouter:nousresearch/hermes-2-pro-llama-3-8b",
         "hermes-3-70b": "openrouter:nousresearch/hermes-3-llama-3.1-70b",
         "hermes-3-405b": "openrouter:nousresearch/hermes-3-llama-3.1-405b",
         "deephermes-3-8b": "openrouter:nousresearch/deephermes-3-llama-3-8b-preview:free",
         "deephermes-3-24b": "openrouter:nousresearch/deephermes-3-mistral-24b-preview:free",
-        "reka-flash": "openrouter:rekaai/reka-flash-3:free",
-        "inflection-3-productivity": "openrouter:inflection/inflection-3-productivity",
-        "inflection-3-pi": "openrouter:inflection/inflection-3-pi",
-        "glm-4": ["openrouter:thudm/glm-4-32b:free", "openrouter:thudm/glm-4-32b"],
-        "glm-4-32b": ["openrouter:thudm/glm-4-32b:free", "openrouter:thudm/glm-4-32b"],
-        "glm-z1-32b": ["openrouter:thudm/glm-z1-32b:free", "openrouter:thudm/glm-z1-32b"],
-        "glm-4-9b": "openrouter:thudm/glm-4-9b:free",
-        "glm-z1-9b": "openrouter:thudm/glm-z1-9b:free",
-        "glm-z1-rumination-32b": "openrouter:thudm/glm-z1-rumination-32b",
-        "minimax": "openrouter:minimax/minimax-01",
-        "dolphin-3.0-r1-24b": "openrouter:cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
-        "dolphin-3.0-24b": "openrouter:cognitivecomputations/dolphin3.0-mistral-24b:free",
-        "dolphin-8x22b": "openrouter:cognitivecomputations/dolphin-mixtral-8x22b",
-        "deepcoder-14b": "openrouter:agentica-org/deepcoder-14b-preview:free",
-        "kimi-vl-thinking": "openrouter:moonshotai/kimi-vl-a3b-thinking:free",
-        "moonlight-16b": "openrouter:moonshotai/moonlight-16b-a3b-instruct:free",
-        "qwerky-72b": "openrouter:featherless/qwerky-72b:free",
+        "hermes-4-405b": "openrouter:nousresearch/hermes-4-405b",
+        "hermes-4-70b": "openrouter:nousresearch/hermes-4-70b"
+    },
+    liquid: {
         "lfm-7b": "openrouter:liquid/lfm-7b",
         "lfm-3b": "openrouter:liquid/lfm-3b",
         "lfm-40b": "openrouter:liquid/lfm-40b",
+        "lfm-2.2-6b": "openrouter:liquid/lfm-2.2-6b",
+        "lfm2-8b-a1b": "openrouter:liquid/lfm2-8b-a1b"
+    },
+    inflection: {
+        "inflection-3-productivity": "openrouter:inflection/inflection-3-productivity",
+        "inflection-3-pi": "openrouter:inflection/inflection-3-pi"
+    },
+    amazon: {
+        "nova-2-lite-v1": "openrouter:amazon/nova-2-lite-v1",
+        "nova-lite-v1": "openrouter:amazon/nova-lite-v1",
+        "nova-micro-v1": "openrouter:amazon/nova-micro-v1",
+        "nova-premier-v1": "openrouter:amazon/nova-premier-v1",
+        "nova-pro-v1": "openrouter:amazon/nova-pro-v1"
+    },
+    bytedance: {
+        "seed-1.6": "openrouter:bytedance-seed/seed-1.6",
+        "seed-1.6-flash": "openrouter:bytedance-seed/seed-1.6-flash",
+        "ui-tars-1.5-7b": "openrouter:bytedance/ui-tars-1.5-7b"
+    },
+    baidu: {
+        "ernie-4.5-21b-a3b": "openrouter:baidu/ernie-4.5-21b-a3b",
+        "ernie-4.5-21b-a3b-thinking": "openrouter:baidu/ernie-4.5-21b-a3b-thinking",
+        "ernie-4.5-300b-a47b": "openrouter:baidu/ernie-4.5-300b-a47b",
+        "ernie-4.5-vl-28b-a3b": "openrouter:baidu/ernie-4.5-vl-28b-a3b",
+        "ernie-4.5-vl-424b-a47b": "openrouter:baidu/ernie-4.5-vl-424b-a47b"
+    },
+    moonshot: {
+        "kimi-vl-thinking": "openrouter:moonshotai/kimi-vl-a3b-thinking:free",
+        "moonlight-16b": "openrouter:moonshotai/moonlight-16b-a3b-instruct:free"
+    },
+    ai21: {
         "jamba-large-1.7": "openrouter:ai21/jamba-large-1.7",
-        "jamba-mini-1.7": "openrouter:ai21/jamba-mini-1.7",
-        "aion-1.0": "openrouter:aion-labs/aion-1.0",
-        "aion-1.0-mini": "openrouter:aion-labs/aion-1.0-mini",
-        "aion-rp-llama-3.1-8b": "openrouter:aion-labs/aion-rp-llama-3.1-8b",
-        "codellama-7b-instruct-solidity": "openrouter:alfredpros/codellama-7b-instruct-solidity",
-        "tongyi-deepresearch-30b-a3b": "openrouter:alibaba/tongyi-deepresearch-30b-a3b",
+        "jamba-mini-1.7": "openrouter:ai21/jamba-mini-1.7"
+    },
+    allenai: {
         "molmo-2-8b": "openrouter:allenai/molmo-2-8b:free",
         "olmo-2-0325-32b-instruct": "openrouter:allenai/olmo-2-0325-32b-instruct",
         "olmo-3-32b-think": "openrouter:allenai/olmo-3-32b-think",
         "olmo-3-7b-instruct": "openrouter:allenai/olmo-3-7b-instruct",
         "olmo-3-7b-think": "openrouter:allenai/olmo-3-7b-think",
         "olmo-3.1-32b-instruct": "openrouter:allenai/olmo-3.1-32b-instruct",
-        "olmo-3.1-32b-think": "openrouter:allenai/olmo-3.1-32b-think",
-        "goliath-120b": "openrouter:alpindale/goliath-120b",
-        "nova-2-lite-v1": "openrouter:amazon/nova-2-lite-v1",
-        "nova-lite-v1": "openrouter:amazon/nova-lite-v1",
-        "nova-micro-v1": "openrouter:amazon/nova-micro-v1",
-        "nova-premier-v1": "openrouter:amazon/nova-premier-v1",
-        "nova-pro-v1": "openrouter:amazon/nova-pro-v1",
-        "magnum-v4-72b": "openrouter:anthracite-org/magnum-v4-72b",
+        "olmo-3.1-32b-think": "openrouter:allenai/olmo-3.1-32b-think"
+    },
+    thudm: {
+        "glm-4": ["openrouter:thudm/glm-4-32b:free", "openrouter:thudm/glm-4-32b"],
+        "glm-4-32b": ["openrouter:thudm/glm-4-32b:free", "openrouter:thudm/glm-4-32b"],
+        "glm-z1-32b": ["openrouter:thudm/glm-z1-32b:free", "openrouter:thudm/glm-z1-32b"],
+        "glm-4-9b": "openrouter:thudm/glm-4-9b:free",
+        "glm-z1-9b": "openrouter:thudm/glm-z1-9b:free",
+        "glm-z1-rumination-32b": "openrouter:thudm/glm-z1-rumination-32b"
+    },
+    zai: {
+        "glm-4.5": "openrouter:z-ai/glm-4.5",
+        "glm-4.6": "openrouter:z-ai/glm-4.6",
+        "glm-4.7": "openrouter:z-ai/glm-4.7"
+    },
+    minimax: {
+        "minimax-01": "openrouter:minimax/minimax-01",
+        "minimax-m1": "openrouter:minimax/minimax-m1",
+        "minimax-m2": "openrouter:minimax/minimax-m2"
+    },
+    cognitivecomputations: {
+        "dolphin-3.0-r1-24b": "openrouter:cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+        "dolphin-3.0-24b": "openrouter:cognitivecomputations/dolphin3.0-mistral-24b:free",
+        "dolphin-8x22b": "openrouter:cognitivecomputations/dolphin-mixtral-8x22b",
+        "dolphin-mistral-24b-venice-edition": "openrouter:cognitivecomputations/dolphin-mistral-24b-venice-edition:free"
+    },
+    arcee: {
         "coder-large": "openrouter:arcee-ai/coder-large",
         "maestro-reasoning": "openrouter:arcee-ai/maestro-reasoning",
         "spotlight": "openrouter:arcee-ai/spotlight",
         "trinity-mini": "openrouter:arcee-ai/trinity-mini:free",
-        "virtuoso-large": "openrouter:arcee-ai/virtuoso-large",
-        "ernie-4.5-21b-a3b": "openrouter:baidu/ernie-4.5-21b-a3b",
-        "ernie-4.5-21b-a3b-thinking": "openrouter:baidu/ernie-4.5-21b-a3b-thinking",
-        "ernie-4.5-300b-a47b": "openrouter:baidu/ernie-4.5-300b-a47b",
-        "ernie-4.5-vl-28b-a3b": "openrouter:baidu/ernie-4.5-vl-28b-a3b",
-        "ernie-4.5-vl-424b-a47b": "openrouter:baidu/ernie-4.5-vl-424b-a47b",
-        "seed-1.6": "openrouter:bytedance-seed/seed-1.6",
-        "seed-1.6-flash": "openrouter:bytedance-seed/seed-1.6-flash",
-        "ui-tars-1.5-7b": "openrouter:bytedance/ui-tars-1.5-7b",
-        "dolphin-mistral-24b-venice-edition": "openrouter:cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+        "virtuoso-large": "openrouter:arcee-ai/virtuoso-large"
+    },
+    alibaba: {
+        "tongyi-deepresearch-30b-a3b": "openrouter:alibaba/tongyi-deepresearch-30b-a3b"
+    },
+    xiaomi: {
+        "mimo-v2-flash": "openrouter:xiaomi/mimo-v2-flash:free"
+    },
+    neversleep: {
+        "lumimaid-8b": "openrouter:neversleep/llama-3.1-lumimaid-8b",
+        "noromaid-20b": "openrouter:neversleep/noromaid-20b"
+    },
+    thedrummer: {
+        "cydonia-24b": "openrouter:thedrummer/cydonia-24b-v4.1",
+        "rocinante-12b": "openrouter:thedrummer/rocinante-12b",
+        "skyfall-36b": "openrouter:thedrummer/skyfall-36b-v2",
+        "unslopnemo-12b": "openrouter:thedrummer/unslopnemo-12b"
+    },
+    others: {
+        "reka-flash": "openrouter:rekaai/reka-flash-3:free",
+        "deepcoder-14b": "openrouter:agentica-org/deepcoder-14b-preview:free",
+        "qwerky-72b": "openrouter:featherless/qwerky-72b:free",
+        "aion-1.0": "openrouter:aion-labs/aion-1.0",
+        "aion-1.0-mini": "openrouter:aion-labs/aion-1.0-mini",
+        "aion-rp-llama-3.1-8b": "openrouter:aion-labs/aion-rp-llama-3.1-8b",
+        "codellama-7b-instruct-solidity": "openrouter:alfredpros/codellama-7b-instruct-solidity",
+        "goliath-120b": "openrouter:alpindale/goliath-120b",
+        "magnum-v4-72b": "openrouter:anthracite-org/magnum-v4-72b",
         "cogito-v2-preview-llama-109b-moe": "openrouter:deepcogito/cogito-v2-preview-llama-109b-moe",
         "cogito-v2-preview-llama-405b": "openrouter:deepcogito/cogito-v2-preview-llama-405b",
         "cogito-v2-preview-llama-70b": "openrouter:deepcogito/cogito-v2-preview-llama-70b",
@@ -246,32 +300,16 @@ const models = {
         "granite-4.0-h-micro": "openrouter:ibm-granite/granite-4.0-h-micro",
         "mercury": "openrouter:inception/mercury",
         "kat-coder-pro": "openrouter:kwaipilot/kat-coder-pro",
-        "lfm-2.2-6b": "openrouter:liquid/lfm-2.2-6b",
-        "lfm2-8b-a1b": "openrouter:liquid/lfm2-8b-a1b",
         "weaver": "openrouter:mancer/weaver",
         "longcat-flash-chat": "openrouter:meituan/longcat-flash-chat",
-        "minimax-m1": "openrouter:minimax/minimax-m1",
-        "minimax-m2": "openrouter:minimax/minimax-m2",
         "morph-v3-fast": "openrouter:morph/morph-v3-fast",
-        "lumimaid-8b": "openrouter:neversleep/llama-3.1-lumimaid-8b",
-        "noromaid-20b": "openrouter:neversleep/noromaid-20b",
         "deepseek-v3.1-nex-n1": "openrouter:nex-agi/deepseek-v3.1-nex-n1",
-        "hermes-4-405b": "openrouter:nousresearch/hermes-4-405b",
-        "hermes-4-70b": "openrouter:nousresearch/hermes-4-70b",
         "internvl3-78b": "openrouter:opengvlab/internvl3-78b",
         "intellect-3": "openrouter:prime-intellect/intellect-3",
         "sorcererlm-8x22b": "openrouter:raifle/sorcererlm-8x22b",
         "relace-apply-3": "openrouter:relace/relace-apply-3",
         "relace-search": "openrouter:relace/relace-search",
-        "cydonia-24b": "openrouter:thedrummer/cydonia-24b-v4.1",
-        "rocinante-12b": "openrouter:thedrummer/rocinante-12b",
-        "skyfall-36b": "openrouter:thedrummer/skyfall-36b-v2",
-        "unslopnemo-12b": "openrouter:thedrummer/unslopnemo-12b",
-        "remm-slerp-l2-13b": "openrouter:undi95/remm-slerp-l2-13b",
-        "mimo-v2-flash": "openrouter:xiaomi/mimo-v2-flash:free",
-        "glm-4.5": "openrouter:z-ai/glm-4.5",
-        "glm-4.6": "openrouter:z-ai/glm-4.6",
-        "glm-4.7": "openrouter:z-ai/glm-4.7"
+        "remm-slerp-l2-13b": "openrouter:undi95/remm-slerp-l2-13b"
     }
 };
 

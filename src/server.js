@@ -77,7 +77,15 @@ app.post('/chat', async (c) => {
 app.get('/api/models', (c) => {
     const allModels = getAllModels();
     return c.json({
-        models: Object.keys(allModels).map(m => ({ shortName: m, fullId: Array.isArray(allModels[m]) ? allModels[m][0] : allModels[m] })),
+        models: Object.keys(allModels).map(m => {
+            const val = allModels[m];
+            return {
+                shortName: m,
+                fullId: Array.isArray(val) ? val[0] : val,
+                variants: Array.isArray(val) ? val : [val],
+                isRotationModel: Array.isArray(val)
+            };
+        }),
         total: Object.keys(allModels).length
     });
 });
@@ -87,7 +95,15 @@ app.get('/api/models/:category', (c) => {
     const categoryModels = getModelsByCategory(category);
     return c.json({
         category,
-        models: Object.keys(categoryModels).map(m => ({ shortName: m, fullId: Array.isArray(categoryModels[m]) ? categoryModels[m][0] : categoryModels[m] })),
+        models: Object.keys(categoryModels).map(m => {
+            const val = categoryModels[m];
+            return {
+                shortName: m,
+                fullId: Array.isArray(val) ? val[0] : val,
+                variants: Array.isArray(val) ? val : [val],
+                isRotationModel: Array.isArray(val)
+            };
+        }),
         total: Object.keys(categoryModels).length
     });
 });
