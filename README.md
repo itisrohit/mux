@@ -16,6 +16,7 @@ Mux is a high-performance, pure Node.js API wrapper for Puter.js. It provides di
 - **Comprehensive Model Support**: Native access to OpenAI, Anthropic, Google, Meta, and DeepSeek.
 - **Advanced Streaming**: Real-time token delivery via Server-Sent Events, including reasoning tokens.
 - **Vision Integration**: Support for multimodal tasks via image URL processing.
+- **Model Alias Rotation**: Models with multiple endpoints are automatically load-balanced/rotated to ensure high availability and bypass rate limits.
 - **Simplified Configuration**: Efficient token management with local secure storage.
 
 ## Quick Start
