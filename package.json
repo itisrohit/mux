@@ -1,7 +1,7 @@
 {
   "name": "mux",
   "version": "1.0.0",
-  "description": "High-performance Node.js API for Puter.js with Direct API architecture",
+  "description": "High-performance Node.js API for Puter.js",
   "main": "start-all.js",
   "scripts": {
     "start": "node start-all.js",

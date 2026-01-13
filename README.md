@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Mux</h1>
-  <p>High-performance Node.js API wrapper for Puter.js with Direct API architecture</p>
+  <p>High-performance Node.js API wrapper for Puter.js</p>
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
   [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
@@ -12,7 +12,7 @@
 Mux is a high-performance, pure Node.js API wrapper for Puter.js. It provides direct access to over 200 AI models including Claude 3.7, GPT-4o-mini, and DeepSeek-R1 with native streaming and vision support.
 
 ## Key Features
-- **Direct API Implementation**: Optimized HTTP communication bypassing browser overhead.
+- **High-Performance Implementation**: Optimized HTTP communication bypassing browser overhead.
 - **Comprehensive Model Support**: Native access to OpenAI, Anthropic, Google, Meta, and DeepSeek.
 - **Advanced Streaming**: Real-time token delivery via Server-Sent Events, including reasoning tokens.
 - **Vision Integration**: Support for multimodal tasks via image URL processing.
